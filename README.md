@@ -1,5 +1,5 @@
 # Fitness-Website
-A sytem I developed for the course Software Engineering in 5th sem
+A sytem I developed for the course Software Engineering in 5th sem\
 A website to track fitness goals, connect with people and manage data like tracking calories and footsteps\
 There are 3 kinds of logins:\
 1.Member(the actual customer of the gym)\
