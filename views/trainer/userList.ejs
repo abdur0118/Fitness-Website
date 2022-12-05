@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Fitness website</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+
+.navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+
+    }
+    /* Set height of the grid so .sidenav can be 100% (adjust if needed) */
+    
+    /* Set gray background color and 100% height */
+    .sidenav {
+      background-color: #f1f1f1;
+      height: 100vh;
+      width: 275px;
+    }
+    
+    /* Set black background color, white text and some padding */
+    footer {
+      background-color: #555;
+      color: white;
+      padding: 15px;
+    }
+    
+    /* On small screens, set height to 'auto' for sidenav and grid */
+    @media screen and (max-width: 767px) {
+      .sidenav {
+        height: auto;
+        padding: 15px;
+      }
+      .row.content {height: auto;} 
+    }
+    table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+
+th {
+  background-color: #04AA6D;
+  color: white;
+}
+
+#viewBtn{
+    border-radius: 4px;
+    background-color: rgb(31, 117, 20);
+    color: white;
+}
+
+  </style>
+</head>
+<body>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+          <div class="navbar-header">
+              <p style="font-size: 30px; color: white;">Home</p>
+          <p style="font-size: 15px; color: white;" id = "trainerName"></p>
+          </div>
+          <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav">
+                
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+      
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+<div class="container-fluid">
+  <div class="row content">
+    <div class="col-sm-3 sidenav">
+      <h2>Profile</h2>
+      <div id="details">
+
+      </div>
+      
+      
+ 
+    </div>
+
+    <div class="col-sm-9">
+        <div id="user_list">
+
+        </div>
+
+        <div id="package_list">
+
+        </div>
+      
+      <div class="row">
+        <div class="col-sm-2 text-center">
+
+        </div>
+        <div class="col-sm-10">
+          
+        </div>
+        <div class="col-sm-2 text-center">
+        </div>
+        <div class="col-sm-10">
+          <div class="row">
+            <div class="col-sm-2 text-center">
+
+            </div>
+            <div class="col-xs-10">
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="container-fluid">
+    <p><a href="/" style="float: left; color: antiquewhite;"  onclick="sessionStorage.removeItem('trainerViewingUser')">Sign Out</a></p>
+</footer>
+
+</body>
+<script>
+     let trainerNameElement = document.getElementById("trainerName");
+     trainerNameElement.innerText = sessionStorage.getItem('name')
+    let trainerName =  trainerNameElement.innerText;
+    function createListTable(){
+        return new Promise((resolve,reject)=>{
+            let container = document.getElementById("user_list");
+            container.innerHTML = `
+            <h2>Members</h2>
+            <table id = "user_table">
+            <tr>
+               <th  scope="col">Sl no.</th>
+                <th  scope="col">Name</th>
+                <th  scope="col">Phone</th>
+                <th  scope="col">start date</th>
+                <th  scope="col">fee status</th>
+                <th  scope="col">package ID</th>
+                <th scope="col">action</td>
+            </tr>
+        </table>
+            `
+            resolve();
+        })
+    }
+
+
+    function createPackageTable(){
+        return new Promise((resolve,reject)=>{
+            let container = document.getElementById("package_list");
+            container.innerHTML = `
+            <div><h2>Package</h2></div>
+            <table style = "margin-bottom:90px " id = "package_table">
+            <tr>
+                <th scope="col">Name</td>
+                <th scope="col">duration</td>
+                <th scope="col">amount</td>
+                <th scope="col">description</td>
+            </tr>
+        </table>
+            `
+            resolve();
+        })
+    }
+    let xmlReq = new XMLHttpRequest();
+    xmlReq.open('post','/trainer/getuserlist',true);
+    xmlReq.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    xmlReq.onload = function(){
+        if(this.status === 200){
+            createListTable().then(()=>{
+                console.log("type:",typeof(this.responseText))
+                console.log("response:",this.response);
+                console.log("type only:",typeof(this.response))
+                console.log("json",JSON.parse(this.responseText)[0])
+                let listArr = JSON.parse(this.responseText);
+                for(let i =0;i<listArr.length;i++){
+                    var table = document.getElementById("user_table");
+                    var row = table.insertRow(1);
+                    var cell1 = row.insertCell(0);
+                    var cell2 = row.insertCell(1);
+                    var cell3 = row.insertCell(2);
+                    var cell4 = row.insertCell(3);
+                    var cell5 = row.insertCell(4);
+                    var cell6 = row.insertCell(5);
+                    var cell7 = row.insertCell(6);
+
+                    cell1.innerHTML = `${listArr.length-i}`;
+                    cell2.innerHTML = `${listArr[i].name}`;
+                    cell3.innerHTML = `${listArr[i].phoneNumber}`;
+                    cell4.innerHTML = `${listArr[i].startDate.substr(0,10)}`;
+                    cell5.innerHTML = `${listArr[i].feeStatus}`;
+                    cell6.innerHTML = `${listArr[i].packageid}`;
+                    cell7.innerHTML = `
+                    <form action="/trainer/user-home" method="post" onsubmit = "sessionStorage.setItem('trainerViewingUser','${listArr[i].name}')">
+                    <input  type="hidden" name="userName" value="${listArr[i].name}"/>
+                    <input  type="hidden" name="trainerName" value="${trainerName}"/>
+                    <button id = "viewBtn">view</button>
+                    </form>`
+                }
+            })
+        }
+    }
+    xmlReq.send(`trainerName=${trainerName}`);
+
+
+    let fillListDetails = new XMLHttpRequest();
+    fillListDetails.open('get','/admin/getPackageList',true);
+        fillListDetails.setRequestHeader('Content-Type', 'application/json') 
+        fillListDetails.onload = function () {
+        if(this.status === 200){
+            createPackageTable().then(()=>{
+
+            let listArr = JSON.parse(this.responseText);
+            for(let i =0;i<listArr.length;i++){
+                var table = document.getElementById("package_table");
+                var row = table.insertRow(1);
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+                var cell4 = row.insertCell(3);
+
+                cell1.innerHTML = `${listArr[i].id}`;
+                cell2.innerHTML = `${listArr[i].duration}`;
+                cell3.innerHTML = `${listArr[i].amount}`;
+                cell4.innerHTML = `${listArr[i].description}`;
+            }
+            })
+        }
+        else{
+            console.log("Some error occured")
+        }
+    }
+    fillListDetails.send();
+
+
+
+    let getDetailsReq = new XMLHttpRequest();
+    getDetailsReq.open('get','/trainer/getDetails',true);
+    getDetailsReq.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    getDetailsReq.setRequestHeader('name',trainerName);
+    getDetailsReq.onload = function(){
+    let res = JSON.parse(this.responseText)
+    let details = document.getElementById('details');
+    details.innerHTML=`
+    <p>Name : ${res[0].name}</p>
+    <p>Age : ${res[0].age}</p>
+    <p>Gender : ${res[0].gender}</p>
+    <p>Phone Number : ${res[0].phoneNumber}</p>
+    <p>Email : ${res[0].email}</p>
+    <p>Salary: ${res[0].salary}</p>
+    `
+    }
+    getDetailsReq.send();
+</script>
+</html>

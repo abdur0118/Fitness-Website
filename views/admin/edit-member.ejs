@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8">
+    <title>Fitness Website</title>
+    <link rel="stylesheet" href="style.css">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <style>
+         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins',sans-serif;
+}
+body{
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  background: linear-gradient(135deg, #71b7e6, #9b59b6);
+}
+.container{
+  max-width: 700px;
+  width: 100%;
+  background-color: #fff;
+  padding: 25px 30px;
+  border-radius: 5px;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.15);
+}
+.container .title{
+  font-size: 25px;
+  font-weight: 500;
+  position: relative;
+}
+.container .title::before{
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 30px;
+  border-radius: 5px;
+  background: linear-gradient(135deg, #71b7e6, #9b59b6);
+}
+.content form .user-details{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin: 20px 0 12px 0;
+}
+form .user-details .input-box{
+  margin-bottom: 15px;
+  width: calc(100% / 2 - 20px);
+}
+form .input-box span.details{
+  display: block;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+.user-details .input-box input{
+  height: 45px;
+  width: 100%;
+  outline: none;
+  font-size: 16px;
+  border-radius: 5px;
+  padding-left: 15px;
+  border: 1px solid #ccc;
+  border-bottom-width: 2px;
+  transition: all 0.3s ease;
+}
+.user-details .input-box input:focus,
+.user-details .input-box input:valid{
+  border-color: #9b59b6;
+}
+ form .gender-details .gender-title{
+  font-size: 20px;
+  font-weight: 500;
+ }
+ form .category{
+   display: flex;
+   width: 80%;
+   margin: 14px 0 ;
+   justify-content: space-between;
+ }
+ form .category label{
+   display: flex;
+   align-items: center;
+   cursor: pointer;
+ }
+ form .category label .dot{
+  height: 18px;
+  width: 18px;
+  border-radius: 50%;
+  margin-right: 10px;
+  background: #d9d9d9;
+  border: 5px solid transparent;
+  transition: all 0.3s ease;
+}
+ #dot-1:checked ~ .category label .one,
+ #dot-2:checked ~ .category label .two,
+ #dot-3:checked ~ .category label .three{
+   background: #9b59b6;
+   border-color: #d9d9d9;
+ }
+ form input[type="radio"]{
+    border: 0px;
+    width: 70%;
+    height: 70%;
+ }
+ form .button{
+   height: 45px;
+   margin: 35px 0
+ }
+ #package{
+    height: 45px;
+    width: 100%;
+    outline: none;
+    font-size: 16px;
+    border-radius: 5px;
+    padding-left: 15px;
+    border: 1px solid;
+    border-color: #9b59b6;
+    border-bottom-width: 2px;
+    transition: all 0.3s ease;
+ }
+ 
+ #trainer{
+  height: 45px;
+    width: 100%;
+    outline: none;
+    font-size: 16px;
+    border-radius: 5px;
+    padding-left: 15px;
+    border: 1px solid;
+    border-color: #9b59b6;
+    border-bottom-width: 2px;
+    transition: all 0.3s ease;
+ }
+ form .button input{
+   height: 100%;
+   width: 100%;
+   border-radius: 5px;
+   border: none;
+   color: #fff;
+   font-size: 18px;
+   font-weight: 500;
+   letter-spacing: 1px;
+   cursor: pointer;
+   transition: all 0.3s ease;
+   background: linear-gradient(135deg, #71b7e6, #9b59b6);
+ }
+ form .button input:hover{
+  background: linear-gradient(-135deg, #71b7e6, #9b59b6);
+  }
+ @media(max-width: 584px){
+ .container{
+  max-width: 100%;
+}
+form .user-details .input-box{
+    margin-bottom: 15px;
+    width: 100%;
+  }
+  form .category{
+    width: 100%;
+  }
+  .content form .user-details{
+    max-height: 300px;
+    overflow-y: scroll;
+  }
+  .user-details::-webkit-scrollbar{
+    width: 5px;
+  }
+  }
+  @media(max-width: 459px){
+  .container .content .category{
+    flex-direction: column;
+  }
+}
+
+     </style>
+   </head>
+<body>
+  <div class="container">
+    <div class="title">Edit Details</div>
+    <div class="content">
+        <form action="/admin/edit-member-form" method="post">
+        <div class="user-details">
+          <div class="input-box">
+            <span class="details">Name</span>
+            <input type="text" name="name" id = "name" readonly> 
+        </div>
+          <div class="input-box">
+            <span class="details">Password</span>
+            <input type="password" name="password" id = "password" >
+          </div>
+          <div class="input-box">
+            <span class="details">age</span>
+            <input type="number" name="age" id = "age">
+          </div>
+          <div class="input-box">
+            <span class="details">Phone Number</span>
+            <input type="tel" pattern="[1-9]{1}[0-9]{9}" name="phoneNumber" id = "phoneNumber">
+          </div>
+          <div class="input-box">
+            <span class="details">email</span>
+            <input type="email" name="email" id = "email">
+          </div>
+          <div class="input-box">
+            <span class="details">feeStatus</span>
+            <input style="width: 15px; height: 15px;" type="radio" id="paid" name="feeStatus" value="paid">
+            <label for="paid">Paid</label><br>
+            <input style="width: 15px; height: 15px;" type="radio" id="pending" name="feeStatus" value="pending">
+            <label for="pending">Pending</label><br>
+          </div>
+          <div class="input-box">
+            <span class="details">balance</span>
+            <input type="number" name="balance" id= "balance">
+          </div>
+          <div class="input-box" id = "packageDrop">
+
+          </div>
+          <div class="input-box" id = "trainerDrop">
+
+          </div>
+          <div class="input-box">
+            <span class="details">start date</span>
+            <input type="date" name="startDate" id = "startDate">
+          </div>
+          <input type="hidden" name = "adminName" >
+        </div>
+        
+        <div class="button">
+          <input type="submit" value="Update">
+        </div>
+      </form>
+    </div>
+  </div>
+
+</body>
+<script>
+  let trainerContainer = document.getElementById('trainerDrop');
+  let packageContainer = document.getElementById('packageDrop');
+  let trainerListReq = new XMLHttpRequest();
+  trainerListReq.open('get','/admin/getTrainerList');
+  trainerListReq.onload = function(){
+    let listArr = JSON.parse(this.responseText);
+    let html = `
+    <span class="details">Trainer</span>
+    <select name="trainerName" id="trainer">`;
+    for(let i =0;i<listArr.length;i++){
+      html += `<option value=${listArr[i].name}>${listArr[i].name}</option>`
+    }
+    html += `</select>`
+    trainerContainer.innerHTML=html;
+  } 
+  trainerListReq.send()
+
+  let packageListReq = new XMLHttpRequest();
+  packageListReq.open('get','/admin/getPackageList');
+  packageListReq.onload = function(){
+    let listArr = JSON.parse(this.responseText);
+    let html = `<span class="details">Package</span>
+            <select name="packageid" id="package">`;
+    for(let i =0;i<listArr.length;i++){
+      html += `<option value=${listArr[i].id}>${listArr[i].id}</option>`
+    }
+    html += `</select>`
+    packageContainer.innerHTML=html;
+
+  } 
+  packageListReq.send()
+
+  let fillEditDetailsReq = new XMLHttpRequest();
+  fillEditDetailsReq.open('get','/admin/fillMemberEditDetails');
+  fillEditDetailsReq.setRequestHeader('Content-type','application/json');
+  fillEditDetailsReq.setRequestHeader('name',sessionStorage.getItem('adminEditing'));
+  fillEditDetailsReq.onload = function(){
+    let result = JSON.parse(this.responseText);
+    console.log("re",result);
+    let name = document.getElementById('name');
+    name.value = result[0].name;
+    let password = document.getElementById('password');
+    password.value = result[0].password;
+    let age = document.getElementById('age');
+    age.value = result[0].age;
+    let phoneNumber = document.getElementById('phoneNumber');
+    phoneNumber.value = result[0].phoneNumber;
+    let email = document.getElementById('email');
+    email.value = result[0].email;
+    document.getElementById(result[0].feeStatus).checked = true;
+    document.getElementById('trainer').value = result[0].trainerName;
+    document.getElementById('package').value = result[0].packageid;
+    document.getElementById('balance').value = result[0].balance;
+    document.getElementById('startDate').value = result[0].startDate.substr(0,10);
+  }
+  fillEditDetailsReq.send();
+</script>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness website</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <style>
+         .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+
+    }
+    footer {
+      background-color: #555;
+      color: white;
+      padding: 15px;
+    }
+    #listElements button{
+        border: none;
+        background-color: rgb(42, 143, 29);
+        padding: 5px;
+        border-radius: 5px;
+        font-size: large;
+        padding-left: 20px;
+        padding-right: 20px;
+
+    }
+    #listElements button:hover{
+        border: black;
+        background-color: rgb(54, 210, 238);
+        color: black;
+    }
+    #listElements{
+        padding: 20px;
+        background-color: rgb(42, 143, 29);
+        margin: 10px;
+        color: white;
+        border-radius: 5px;
+
+    }
+    #url{
+        color:rgb(34, 170, 224);
+        margin-left: 35px;
+        margin-top: 5px;
+    }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+          <div class="navbar-header">
+              <p style="font-size: 30px; color: white;">Chat List</p>
+          <p style="font-size: 15px; color: white;" id = "memberName"></p>
+          </div>
+          <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav" >
+      
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <p style="color: rgb(180, 193, 204);"> --click on topic to chat-- </p>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    <div>
+        <ul id="discList" style="list-style: none;">
+
+        </ul>
+
+    </div>
+    <footer class="container-fluid text-center">
+        <p><a href="/member/home" style="float: left; color: antiquewhite;">
+            <button style="background-color: #555;color: bisque;border: none;" onclick="sessionStorage.removeItem('chatTopicId')">Home</button>
+        </a></p>
+    
+    </footer>
+</body>
+<script>
+    let memberNameElement = document.getElementById("memberName");
+    memberNameElement.innerText = sessionStorage.getItem('name');
+    memberName = memberNameElement.innerText;
+    let ul = document.getElementById("discList");
+    let xmlReq = new XMLHttpRequest();
+    xmlReq.open('get','/member/get-disc-list',true);
+    xmlReq.setRequestHeader('Content-Type', 'application/json') 
+    xmlReq.onload = function(){
+            console.log("sta",this.status);
+            console.log(this.response);
+            let listArr = JSON.parse(this.response);
+            for(let i = 0;i<listArr.length;i++){
+                let li = document.createElement('li');
+                li.innerHTML = `
+                <div id = "listElements">
+                <form action="/member/chat" method="post" onsubmit = "sessionStorage.setItem('chatTopicId',${listArr[i].id})">
+                <input  type="hidden" name="name" value=${memberName}>
+                <input  type="hidden" name="topicId" value=${listArr[i].id}>
+                <button> ${listArr[i].title}</button>
+                </form>
+                <a id = "url" href="${listArr[i].url}" target="_blank">View Article</a>
+                </div>
+                `
+                ul.appendChild(li);
+            }
+    }
+    xmlReq.send();
+</script>
+</html>

@@ -1,0 +1,72 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness website</title>
+    <link rel="stylesheet" href="../../static/css/todostyle.css">
+    <script defer src="http://localhost:8000/socket.io/socket.io.js"> </script>
+    <script defer src = "../../static/js/todo.js"></script>
+    <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <style>
+        body{
+            color: black;
+        }
+               .navbar {
+      margin-bottom: 10px;
+      border-radius: 0;
+
+    }
+    footer {
+      background-color: #555;
+      color: white;
+      padding: 15px;
+    }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+          <div class="navbar-header">
+              <p style="font-size: 30px; color: white;">Tasks</p>
+          <p style="font-size: 15px; color: white;" id = "memberName"></p>
+          </div>
+          <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav">
+      
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+      
+            </ul>
+          </div>
+        </div>
+      </nav>
+    <div id="todo">
+        <div id="myDIV" class="header">
+            <h2>My To Do List</h2>
+            <input style="color:black" type="text" id="myInput" placeholder="Title...">
+            <span onclick="newElement()" class="addBtn">Add</span>
+          </div>
+          
+          <ul id="myUL">
+            
+          </ul>
+    </div>
+    <div id="chartContainer" style="height: 300px; width: 100%;">
+    </div>
+    
+    <footer class="container-fluid text-center">
+      <p><a href="/member/home" style="color:bisque; float: left">
+
+        <button style="background-color: #555; color: beige; border: none;">Home</button>
+</a></p>
+    </footer>
+</body>
+<script>
+</script>
+</html>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness websit</title>
+    <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+       .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+
+    }
+    
+    /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+    
+    /* Set gray background color and 100% height */
+    .sidenav {
+      padding-top: 20px;
+      background-color: #f1f1f1;
+      height: 100vh;
+    }
+    
+    /* Set black background color, white text and some padding */
+    footer {
+      background-color: #555;
+      color: white;
+      padding: 15px;
+    }
+    
+    /* On small screens, set height to 'auto' for sidenav and grid */
+    @media screen and (max-width: 767px) {
+      .sidenav {
+        height: 100vh;
+        padding: 15px;
+      }
+    }
+    .addedSubmitButton{
+        border-radius: 4px;
+        background-color: rgb(31, 117, 20); 
+        color: white;
+    }
+    .detailsButton{
+        border-radius: 4px;
+        background-color: black; 
+        color: white;
+    }
+    .chartButtons{
+        border-radius: 4px;
+        background-color: rgb(32, 148, 21); 
+        color: white;
+    }
+    .charts{
+        margin-top: 40px;
+        margin-bottom: 20px;
+
+    }
+</style>
+</head>
+<body>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+          <div class="navbar-header">
+              <p style="font-size: 30px; color: white;">Member's Home</p>
+          <p style="font-size: 15px; color: white;" id = "trainerName"></p>
+          </div>
+          <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav">
+      
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+      
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+    <div class="container-fluid text-center ">    
+        <div class="row content">
+            <div class="col-sm-2 sidenav">
+                <ul style="list-style: none;float: left;">
+                    <li><form action="/trainer/load-todo" method="post">
+
+                        <button class = "detailsButton"> Tasks</button>
+                    </form></li>
+                    
+                </ul>
+            </div>
+            <div class="col-sm-8 text-left">
+              <h2 id = "memberName"></h2>
+              <h2>Fitness Graphs</h2>
+          <div class="charts">
+      
+              <div id="weightChartContainer" style="height: 300px; width: 100%;">
+              </div>
+ 
+          </div> 
+      
+          <div class="charts">
+      
+              <div id="calorieChartContainer" style="height: 300px; width: 100%;">
+              </div>
+              <br>
+          </div>
+      
+          <div class="charts">
+      
+              <div id="stepChartContainer" style="height: 300px; width: 100%;">
+              </div>
+          </div>
+          
+      </div>
+      <div class="col-sm-2 sidenav">
+          <h2>Profile</h2>
+          <div id="details">
+              
+          </div>
+          </div>
+      </div>
+      </div>
+      <footer class="container-fluid text-center">
+        <p><a href="/" style="float: left; color: antiquewhite;" onclick="sessionStorage.removeItem('trainerViewingUser')">Sign Out</a></p>
+    </footer>
+</body>
+<script>
+    let memberIdELement = document.getElementById("memberName")
+    memberIdELement.innerText = sessionStorage.getItem('trainerViewingUser')
+    let memberName = memberIdELement.innerText;
+    console.log(memberName)
+    let trainerNameElement = document.getElementById("trainerName")
+    trainerNameElement.innerText = sessionStorage.getItem("name");
+    let trainer = trainerNameElement.innerText;
+    let fillListDetails = new XMLHttpRequest()
+    let trainerbtn = document.getElementById("trainerbtn");
+    
+    
+    let getMemberDetailsReq = new XMLHttpRequest();
+    getMemberDetailsReq.open('get','/trainer/getMemberDetails',true);
+    getMemberDetailsReq.setRequestHeader('name', memberName);
+    getMemberDetailsReq.onload = function(){
+    let res = JSON.parse(this.responseText)
+    let details = document.getElementById('details');
+    details.innerHTML=`
+    <p>Name : ${res[0].name}</p>
+    <p>Age : ${res[0].age}</p>
+    <p>Gender : ${res[0].gender}</p>
+    <p>Phone Number : ${res[0].phoneNumber}</p>
+    <p>Email : ${res[0].email}</p>
+    <p>Start Date : ${res[0].startDate.substr(0,10)}</p>
+    <p>Package ID : ${res[0].packageid}</p>
+    `
+}
+getMemberDetailsReq.send();
+
+function createChartsObjSteps(dataObj){
+        let firstObj = {"type":"column", "dataPoints":new Array()},secondObj = {"type":"column", "dataPoints":new Array()};
+        for(let i =0;i<dataObj.length;i++){
+            let temp = dataObj[i].x
+            temp = temp.slice(0,10)
+            let tempObj1 = {}
+            tempObj1.x = 10*i;
+            tempObj1.y = dataObj[i].goal;
+            tempObj1.label = temp
+            firstObj.dataPoints.push(tempObj1);
+            let tempObj2 = {}
+            tempObj2.x = 10*i
+            tempObj2.y = dataObj[i].done;
+            tempObj2.label = temp//new Date(temp);
+            secondObj.dataPoints.push(tempObj2);
+        }
+        
+        let text = "steps";
+        let data = [firstObj,secondObj]
+        let obj = {title:{text:text},data: data};
+        console.log(obj);
+        return obj;
+    }
+   
+
+    let xmlReqSteps = new XMLHttpRequest();
+    xmlReqSteps.open('get','/member/get-step',true);
+    xmlReqSteps.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    xmlReqSteps.setRequestHeader('name',memberName);
+    xmlReqSteps.onload = function(){
+    let stepChart = new CanvasJS.Chart("stepChartContainer",createChartsObjSteps(JSON.parse(this.responseText)))
+    stepChart.render();
+}
+xmlReqSteps.send();
+
+
+
+
+
+
+    
+
+    function createChartsObjCalories(dataObj){
+        let firstObj = {"type":"column", "dataPoints":new Array()},secondObj = {"type":"column", "dataPoints":new Array()};
+        for(let i =0;i<dataObj.length;i++){
+            let temp = dataObj[i].x
+            temp = temp.slice(0,10)
+            let tempObj1 = {}
+            tempObj1.x = 10*i;
+            tempObj1.y = dataObj[i].goal;
+            tempObj1.label = temp//new Date(temp);
+            firstObj.dataPoints.push(tempObj1);
+            let tempObj2 = {}
+            tempObj2.x = 10*i
+            tempObj2.y = dataObj[i].done;
+            tempObj2.label = temp//new Date(temp);
+            secondObj.dataPoints.push(tempObj2);
+        }
+        
+        let text = "calories";
+        let data = [firstObj,secondObj]
+        let obj = {title:{text:text},data: data};
+        console.log(obj);
+        return obj;
+    }
+   
+
+    let xmlReqCalories = new XMLHttpRequest();
+    xmlReqCalories.open('get','/member/get-calories',true);
+    xmlReqCalories.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    xmlReqCalories.setRequestHeader('name',memberName);
+    xmlReqCalories.onload = function(){
+    let calorieChart = new CanvasJS.Chart("calorieChartContainer",createChartsObjCalories(JSON.parse(this.responseText)))
+    calorieChart.render();
+}
+xmlReqCalories.send();
+    function createChartsObjWeights(dataObj){
+        for(let i =0;i<dataObj.length;i++){
+            let temp = dataObj[i].x
+            temp = temp.slice(0,10)
+            dataObj[i].x = new Date(temp); 
+        }
+       
+        let text = "weights";
+        let type = "line"
+        let dataPoints = dataObj;
+        let inDataObj = {type: type, dataPoints : dataPoints}
+        data = [inDataObj]
+        let obj = {title:{text:text},data: data};
+        console.log(obj)
+        return obj;
+    }
+let xmlReqWeights = new XMLHttpRequest();
+xmlReqWeights.open('post','/member/get-weights',true);
+xmlReqWeights.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+xmlReqWeights.onload = function(){
+    let chart = new CanvasJS.Chart("weightChartContainer",createChartsObjWeights(JSON.parse(this.responseText)));
+    chart.render();
+}
+xmlReqWeights.send(`name=${memberName}`);
+
+
+
+</script>
+</html>

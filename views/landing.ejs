@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <head>
+    <title>Fitness Website</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+  </head>
+  <body>
+    <form action="/admin/home" method="post" id = "link" style = "width: 450px; margin-top: 73px;" onsubmit="sessionStorage.setItem('name', document.getElementById('uname').value) ">
+      <h1>Login</h1>
+      <div class="formcontainer">
+      <hr/>
+      <div class="container">
+        <label for="uname"><strong>Username</strong></label>
+        <input type="text" name="name" id = "uname"/> 
+        <label for="psw"><strong>Password</strong></label>
+        <input type="password" name="password"/>
+      </div>
+      <div>
+        <label for="userType">USER TYPE:</label>
+          <button class = "myButtons" type = "button" id = "member">Member</button> 
+          <button class = "myButtons" type = "button" id = "trainer">Trainer</button> 
+          <button class = "myButtons" type = "button" id = "admin">Admin</button> 
+
+      </div>
+      <button id = "submitButton" type="submit">Login</button>
+      <div class="container" >
+        <label style="padding-left: 15px">
+      
+        </label>
+      
+      </div>
+    </form>
+  </body>
+  <script>
+    let memberbtn = document.getElementById("member");
+    let trainerBtn = document.getElementById("trainer");
+    let adminBtn = document.getElementById("admin");
+    adminBtn.style.borderColor = 1;
+    memberbtn.style.opacity = 0.6;
+    trainerBtn.style.opacity = 0.6;
+    memberbtn.addEventListener('click',function(){
+      memberbtn.style.opacity = 1;
+      adminBtn.style.opacity = 0.6;
+      trainerBtn.style.opacity = 0.6;
+      console.log("IN member")
+      let link = document.getElementById("link");
+      console.log(link);
+      link.action = 'http://localhost:800/member/home'
+
+    })
+    trainerBtn.addEventListener('click',function(){
+      trainerBtn.style.opacity = 1;
+      memberbtn.style.opacity = 0.6;
+      adminBtn.style.opacity = 0.6;
+      console.log("IN train")
+      let link = document.getElementById("link");
+      link.action = 'http://localhost:800/trainer/userlist'
+    })
+    adminBtn.addEventListener('click',function(){
+      adminBtn.style.opacity = 1;
+      memberbtn.style.opacity = 0.8;
+      trainerBtn.style.opacity = 0.8;
+      console.log("IN admin")
+      let link = document.getElementById("link");
+      link.action = 'http://localhost:800/admin/home'
+    })
+  </script>
+  <style>
+    html, body {
+    display: flex;
+    justify-content: center;
+    font-family: Roboto, Arial, sans-serif;
+    font-size: 15px;
+    background: linear-gradient(135deg, #71b7e6, #9b59b6);
+    }
+    form {
+    border: 5px solid #f1f1f1;
+    background-color: white;
+    border-radius: 4px;
+    }
+    input[type=text], input[type=password] {
+    width: 100%;
+    padding: 16px 8px;
+    margin: 8px 0;
+    display: inline-block;
+    border-color: #8a7a9e;
+    border-radius: 5px;
+    border-width: 1.9px;
+    border-bottom-width: 2px;
+    }
+    #submitButton {
+    background: linear-gradient(135deg, #71b7e6, #9b59b6);
+    color: white;
+    padding: 14px 0;
+    margin: 10px 0;
+    border: none;
+    cursor:pointer;
+    width: 100%;
+    border-radius: 4px;
+    }
+
+    .myButtons {
+    background-color: #7842bf;
+    color: white;
+    padding: 5px 10px;
+    margin: 10px 0;
+    /* border: none; */
+    cursor: pointer;
+    width: 80px;
+    border-radius: 4px;
+    }
+    h1 {
+    text-align:center;
+    font-size:18;
+    }
+    button:hover {
+    opacity: 0.8;
+    }
+    .formcontainer {
+    text-align: left;
+    margin: 24px 50px 12px;
+    }
+    .container {
+    padding: 16px 0;
+    text-align:left;
+    }
+    span.psw {
+    float: right;
+    padding-top: 0;
+    padding-right: 15px;
+    }
+    /* Change styles for span on extra small screens */
+    @media screen and (max-width: 300px) {
+    span.psw {
+    display: block;
+    float: none;
+    }
+  }
+  </style>
+</html>

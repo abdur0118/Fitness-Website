@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Fitness Website</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <script defer>
+      
+  </script>
+  <style>
+
+    .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+
+    }
+    
+    .row.content {height: 100vh}
+    
+    .sidenav {
+      padding-top: 20px;
+      background-color: #f1f1f1;
+      height: 100%;
+    }
+    
+    footer {
+      background-color: #555;
+      color: white;
+      padding: 15px;
+    }
+    
+    @media screen and (max-width: 767px) {
+      .sidenav {
+        height: auto;
+        padding: 15px;
+      }
+      .row.content {height:auto;} 
+    }
+    .addedSubmitButton{
+        border-radius: 4px;
+        background-color: rgb(31, 117, 20); 
+        color: white;
+    }
+    .detailsButton{
+        border-radius: 4px;
+        background-color: black; 
+        color: white;
+    }
+    table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+
+th {
+  background-color: #04AA6D;
+  color: white;
+}
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <p style="font-size: 30px; color: white;">Admin</p>
+    <p style="font-size: 15px; color: white;" id = "adminName"></p>
+  </div>
+</nav>
+  
+<div class="container-fluid text-center">    
+  <div class="row content">
+    <div class="col-sm-2 sidenav">
+        <ul style="list-style-type: none; float: left;">
+            <li style="height: 50px; "><button class="detailsButton" id = "adminbtn"> Admins</button> </li>
+            <li style="height: 50px; "><button class="detailsButton" id = "memberbtn"> Members</button> </li>
+            <li style="height: 50px; "><button class="detailsButton" id = "trainerbtn"> Trainers</button> </li>
+            <li style="height: 50px; "><button class="detailsButton" id = "packagebtn"> Packages</button> </li>
+            <li style="height: 50px; "><button class="detailsButton" id = "dueUsers"> Due Users</button> </li>
+        </ul>
+    </div>
+    <div class="col-sm-8 text-left"> 
+      <div id="admin_list">
+        
+    </div>
+    <div id="details">
+
+    </div>
+    </div>
+    <div class="col-sm-2 sidenav">
+      <div id = "adminDetailsContainer" class="well">
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="container-fluid text-center">
+  <p><a href="/" style="color:bisque; float: left" onclick="sessionStorage.removeItem('adminEditing')">Sign Out</a></p>
+</footer>
+
+</body>
+<script>
+
+
+
+    function createAdminTable(){
+        return new Promise((resolve,reject)=>{
+            let container = document.getElementById("admin_list");
+            container.innerHTML = `
+            <div><h2>Admin</h2></div>
+            <table style = "margin-bottom:90px " id = "admin_table">
+            <tr>
+               <th scope="col">Sl no.</td>
+                <th scope="col">Name</td>
+                <th scope="col">Phone</td>
+                <th scope="col">Email</td>
+                <th scope="col">Action</td>
+            </tr>
+        </table>
+        <form style = "height:50px" action="/admin/register-admin" method="post">
+            <input type="hidden" name = "adminName" value=${adminName}>
+            <button class="addedSubmitButton">Add admin</button>
+            </form>
+            <form action="/admin/remove-admin" method="post">
+            <input type="hidden" name = "adminName" value=${adminName}>
+            <button class="addedSubmitButton">Remove admin</button>
+            </form>
+            `
+            resolve();
+        })
+    }
+
+    function createMemberTable(yes){
+        return new Promise((resolve,reject)=>{
+            let temp = '';
+            let container = document.getElementById("admin_list");
+            temp = `
+            <div><h2>Member</h2></div>
+            <table style = "margin-bottom:90px " id = "admin_table">
+            <tr>
+               <th scope="col">Sl no.</td>
+                <th scope="col">Name</td>
+                <th scope="col">age</td>
+                <th scope="col">gender</td>
+                <th scope="col">phone number</td>
+                <th scope="col">Email</td>
+                <th scope="col">start date</td>
+                <th scope="col">fee status</td>
+                <th scope="col">balance</td>
+                <th scope="col">package ID</td>
+                <th scope="col">Trainer Name</td>
+                <th scope="col">Action</td>
+            </tr>
+        </table>`
+        if(yes){
+        
+        temp = temp +    `<form style = "height:50px" action="/admin/register-member" method="post">
+            <input type="hidden" name = "adminName" value=${adminName}>
+            <button class="addedSubmitButton">Add member</button>
+            </form>
+            <form action="/admin/remove-member" method="post">
+            <input type="hidden" name = "adminName" value=${adminName}>
+            <button  class="addedSubmitButton">Remove member</button>
+            </form>
+            `
+        }
+        else{
+            temp = temp + `<button class="addedSubmitButton" id = "notifyUserButton" onclick = "notifyFunction()">Notify Users</button>`
+        }
+        container.innerHTML = temp;
+            resolve();
+        })
+    }
+    
+    function createTrainerTable(){
+        return new Promise((resolve,reject)=>{
+            let container = document.getElementById("admin_list");
+            container.innerHTML = `
+            <div><h2>Trainer</h2></div>
+            <table style = "margin-bottom:90px " id = "admin_table">
+            <tr>
+               <th scope="col">Sl no.</td>
+                <th scope="col">Name</td>
+                <th scope="col">age</td>
+                <th scope="col">gender</td>
+                <th scope="col">salary</td>
+                <th scope="col">phone number</td>
+                <th scope="col">Email</td>
+                <th scope="col">Action</td>
+            </tr>
+        </table>
+        <form style = "height:50px" action="/admin/register-trainer" method="post">
+            <input type="hidden" name = "adminName" value=${adminName}>
+            <button class="addedSubmitButton">Add trainer</button>
+            </form>
+            <form action="/admin/remove-trainer" method="post">
+            <input type="hidden" name = "adminName" value=${adminName}>
+            <button class="addedSubmitButton">Remove trainer</button>
+            </form>
+            `
+            resolve();
+        })
+    }
+
+    function createPackageTable(){
+        return new Promise((resolve,reject)=>{
+            let container = document.getElementById("admin_list");
+            container.innerHTML = `
+            <div><h2>Package</h2></div>
+            <table style = "margin-bottom:90px " id = "admin_table">
+            <tr>
+                <th scope="col">Name</td>
+                <th scope="col">duration</td>
+                <th scope="col">amount</td>
+                <th scope="col">description</td>
+                <th scope="col">Action</td>
+            </tr>
+        </table>
+        <form style = "height:50px" action="/admin/register-package" method="post">
+            <input type="hidden" name = "adminName" value=${adminName}>
+            <button class="addedSubmitButton">Add package</button>
+            </form>
+            <form action="/admin/remove-package" method="post">
+            <input type="hidden" name = "adminName" value=${adminName}>
+            <button class="addedSubmitButton">Remove package</button>
+            </form>
+            `
+            resolve();
+        })
+    }
+
+    let adminIdELement = document.getElementById("adminName")
+    adminIdELement.innerText = sessionStorage.getItem('name');
+    let adminName = adminIdELement.innerText;
+    let fillListDetails = new XMLHttpRequest()
+    let adminbtn = document.getElementById("adminbtn");
+    adminbtn.addEventListener('click',()=>{
+        fillListDetails.open('get','/admin/getAdminList',true);
+        fillListDetails.setRequestHeader('Content-Type', 'application/json') 
+        fillListDetails.onload = function () {
+        if(this.status === 200){
+            createAdminTable().then(()=>{
+                let listArr = JSON.parse(this.responseText);
+                for(let i =0;i<listArr.length;i++){
+                    var table = document.getElementById("admin_table");
+                    var row = table.insertRow(1);
+                    var cell1 = row.insertCell(0);
+                    var cell2 = row.insertCell(1);
+                    var cell3 = row.insertCell(2);
+                    var cell4 = row.insertCell(3);
+                    var cell5 = row.insertCell(4);
+                    cell1.innerHTML = `${listArr.length-i}`;
+                    cell2.innerHTML = `${listArr[i].name}`;
+                    cell3.innerHTML = `${listArr[i].phoneNumber}`;
+                    cell4.innerHTML = `${listArr[i].email}`;
+                    cell5.innerHTML = `
+                    <form action="/admin/edit-admin" method="post" onsubmit="sessionStorage.setItem('adminEditing', '${listArr[i].name}')">
+                    <input type="hidden" name = "adminName" value=${adminName}>
+                    <input type="hidden" name="name" value = ${listArr[i].name}> 
+                    <input type="hidden" name="password" value = ${listArr[i].password}>
+                    <input type="hidden" name="phoneNumber" value = ${listArr[i].phoneNumber}>
+                    <input type="hidden" name="email" value = ${listArr[i].email}>
+                    <button class="addedSubmitButton">Edit</button>
+                    </form>`;
+                    if(adminName == listArr[i].name){
+                        let adminDetailsContainer = document.getElementById('adminDetailsContainer');
+                        adminDetailsContainer.innerHTML = `
+                        <h3>Profile</h3>
+                        <p>Name: ${listArr[i].name}</p>
+                        <p>Phone Number: ${listArr[i].phoneNumber}</p>
+                        <p>Email: ${listArr[i].email}</p>
+                        `
+                    }
+                }
+            })
+        }
+        else{
+            console.log("Some error occured")
+        }
+    }
+    fillListDetails.send();
+    })
+    
+    adminbtn.click();
+
+    let memberbtn = document.getElementById("memberbtn");
+    memberbtn.addEventListener('click',()=>{
+        fillListDetails.open('get','/admin/getUserList',true);
+        fillListDetails.setRequestHeader('Content-Type', 'application/json') 
+        fillListDetails.onload = function () {
+        if(this.status === 200){
+            createMemberTable(true).then(()=>{console.log("type:",typeof(this.responseText))
+            let listArr = JSON.parse(this.responseText);
+            for(let i =0;i<listArr.length;i++){
+                var table = document.getElementById("admin_table");
+                var row = table.insertRow(1);
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+                var cell4 = row.insertCell(3);
+                var cell5 = row.insertCell(4);
+                var cell6 = row.insertCell(5);
+                var cell7 = row.insertCell(6);
+                var cell8 = row.insertCell(7);
+                var cell9 = row.insertCell(8);
+                var cell10 = row.insertCell(9);
+                var cell11 = row.insertCell(10);
+                var cell12 = row.insertCell(11);
+
+                cell1.innerHTML = `${listArr.length-i}`;
+                cell2.innerHTML = `${listArr[i].name}`;
+                cell3.innerHTML = `${listArr[i].age}`;
+                cell4.innerHTML = `${listArr[i].gender}`;
+                cell5.innerHTML = `${listArr[i].phoneNumber}`;
+                cell6.innerHTML = `${listArr[i].email}`;
+                cell7.innerHTML = `${listArr[i].startDate.substr(0,10)}`;
+                cell8.innerHTML = `${listArr[i].feeStatus}`;
+                cell9.innerHTML = `${listArr[i].balance}`;
+                cell10.innerHTML = `${listArr[i].packageid}`;
+                cell11.innerHTML = `${listArr[i].trainerName}`;
+                cell12.innerHTML = `
+                <form action="/admin/edit-member" method="post"  onsubmit="sessionStorage.setItem('adminEditing', '${listArr[i].name}')">
+                <input type="hidden" name="name" value = ${listArr[i].name}> 
+                <input type="hidden" name="password" value = ${listArr[i].password}>
+                <input type="hidden" name="age" value = ${listArr[i].age}>
+                <input type="hidden" name="phoneNumber" value = ${listArr[i].phoneNumber}>
+                <input type="hidden" name="email" value = ${listArr[i].email}>
+                <input type="hidden" name="feeStatus" value = ${listArr[i].feeStatus}>
+                <input type="hidden" name="balance" value = ${listArr[i].balance}>
+                <input type="hidden" name="packageid" value = ${listArr[i].packageid}>
+                <input type="hidden" name="trainerName" value = ${listArr[i].trainerName}>
+                <input type="hidden" name="startDate" value = ${(listArr[i].startDate).substr(0,10)}>
+                <input type="hidden" name = "adminName" value=${adminName}>
+                <button class="addedSubmitButton">Edit</button>
+                </form>
+                `
+            }
+            })
+        }
+        else{
+            console.log("Some error occured")
+        }
+    }
+    fillListDetails.send();
+    })
+
+
+    let trainerbtn = document.getElementById("trainerbtn");
+    trainerbtn.addEventListener('click',()=>{
+        fillListDetails.open('get','/admin/getTrainerList',true);
+        fillListDetails.setRequestHeader('Content-Type', 'application/json') 
+        fillListDetails.onload = function () {
+        if(this.status === 200){
+            createTrainerTable().then(()=>{
+            let listArr = JSON.parse(this.responseText);
+            for(let i =0;i<listArr.length;i++){
+                var table = document.getElementById("admin_table");
+                var row = table.insertRow(1);
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+                var cell4 = row.insertCell(3);
+                var cell5 = row.insertCell(4);
+                var cell6 = row.insertCell(5);
+                var cell7 = row.insertCell(6);
+                var cell8 = row.insertCell(7);
+
+                cell1.innerHTML = `${listArr.length-i}`;
+                cell2.innerHTML = `${listArr[i].name}`;
+                cell3.innerHTML = `${listArr[i].age}`;
+                cell4.innerHTML = `${listArr[i].gender}`;
+                cell5.innerHTML = `${listArr[i].salary}`;
+                cell6.innerHTML = `${listArr[i].phoneNumber}`;
+                cell7.innerHTML = `${listArr[i].email}`;
+                cell8.innerHTML = `
+                <form action="/admin/edit-trainer" method="post" onsubmit="sessionStorage.setItem('adminEditing', '${listArr[i].name}')">
+                <input type="hidden" name="name" value = ${listArr[i].name}> 
+                <input type="hidden" name="password" value = ${listArr[i].password}>
+                <input type="hidden" name="age" value = ${listArr[i].age}>
+                <input type="hidden" name="phoneNumber" value = ${listArr[i].phoneNumber}>
+                <input type="hidden" name="email" value = ${listArr[i].email}>
+                <input type="hidden" name = "adminName" value=${adminName}>
+                <button class="addedSubmitButton">Edit</button>
+                </form>
+                `
+            }
+            })
+        }
+        else{
+            console.log("Some error occured")
+        }
+    }
+    fillListDetails.send();
+    })
+
+
+    let packagebtn = document.getElementById("packagebtn");
+    packagebtn.addEventListener('click',()=>{
+        fillListDetails.open('get','/admin/getPackageList',true);
+        fillListDetails.setRequestHeader('Content-Type', 'application/json') 
+        fillListDetails.onload = function () {
+        if(this.status === 200){
+            createPackageTable().then(()=>{
+            let listArr = JSON.parse(this.responseText);
+            for(let i =0;i<listArr.length;i++){
+                var table = document.getElementById("admin_table");
+                var row = table.insertRow(1);
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+                var cell4 = row.insertCell(3);
+                var cell5 = row.insertCell(4);
+
+                cell1.innerHTML = `${listArr[i].id}`;
+                cell2.innerHTML = `${listArr[i].duration}`;
+                cell3.innerHTML = `${listArr[i].amount}`;
+                cell4.innerHTML = `${listArr[i].description}`;
+                cell5.innerHTML = `
+                <form action="/admin/edit-package" method="post" onsubmit="sessionStorage.setItem('adminEditing', '${listArr[i].id}')">
+                <input type="hidden" name="id" value = ${listArr[i].id}> 
+                <input type="hidden" name="duration" value = ${listArr[i].duration}>
+                <input type="hidden" name="amount" value = ${listArr[i].amount}>
+                <input type="hidden" name="description" value = ${listArr[i].description}>
+                <input type="hidden" name = "adminName" value=${adminName}>
+                <button class="addedSubmitButton">Edit</button>
+                </form>
+                `
+            }
+            })
+        }
+        else{
+            console.log("Some error occured")
+        }
+    }
+    fillListDetails.send();
+    })
+    var tempUserList = new Array();
+    let dueUsersBtn = document.getElementById('dueUsers')
+    dueUsers.addEventListener('click',()=>{
+        fillListDetails.open('get','/admin/getdueUsersList',true);
+        fillListDetails.setRequestHeader('Content-Type', 'application/json') 
+        fillListDetails.onload = function () {
+        if(this.status === 200){
+            createMemberTable(false).then(()=>{console.log("type:",typeof(this.responseText))
+            let listArr = JSON.parse(this.responseText);
+            for(let i =0;i<listArr.length;i++){
+                var table = document.getElementById("admin_table");
+                var row = table.insertRow(1);
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+                var cell4 = row.insertCell(3);
+                var cell5 = row.insertCell(4);
+                var cell6 = row.insertCell(5);
+                var cell7 = row.insertCell(6);
+                var cell8 = row.insertCell(7);
+                var cell9 = row.insertCell(8);
+                var cell10 = row.insertCell(9);
+                var cell11 = row.insertCell(10);
+                var cell12 = row.insertCell(11);
+
+                cell1.innerHTML = `${i+1}`;
+                cell2.innerHTML = `${listArr[i].name}`;
+                cell3.innerHTML = `${listArr[i].age}`;
+                cell4.innerHTML = `${listArr[i].gender}`;
+                cell5.innerHTML = `${listArr[i].phoneNumber}`;
+                cell6.innerHTML = `${listArr[i].email}`;
+                cell7.innerHTML = `${listArr[i].startDate.substr(0,10)}`;
+                cell8.innerHTML = `${listArr[i].feeStatus}`;
+                cell9.innerHTML = `${listArr[i].balance}`;
+                cell10.innerHTML = `${listArr[i].packageid}`;
+                cell11.innerHTML = `${listArr[i].trainerName}`;
+                cell12.innerHTML = `
+                <form action="/admin/edit-member" method="post">
+                <input type="hidden" name="name" value = ${listArr[i].name}> 
+                <input type="hidden" name="password" value = ${listArr[i].password}>
+                <input type="hidden" name="age" value = ${listArr[i].age}>
+                <input type="hidden" name="phoneNumber" value = ${listArr[i].phoneNumber}>
+                <input type="hidden" name="email" value = ${listArr[i].email}>
+                <input type="hidden" name="feeStatus" value = ${listArr[i].feeStatus}>
+                <input type="hidden" name="balance" value = ${listArr[i].balance}>
+                <input type="hidden" name="packageid" value = ${listArr[i].packageid}>
+                <input type="hidden" name="trainerName" value = ${listArr[i].trainerName}>
+                <input type="hidden" name="startDate" value = ${(listArr[i].startDate).substr(0,10)}>
+                <input type="hidden" name = "adminName" value=${adminName}>
+                <button class="addedSubmitButton">Edit</button>
+                </form>
+                `
+                tempUserList.push(listArr[i].name);
+            }
+            })
+        }
+        else{
+            console.log("Some error occured")
+        }
+    }
+    fillListDetails.send();
+
+    })
+
+    function notifyFunction(){
+        var notifyUserBtn = document.getElementById('notifyUserButton');
+    notifyUserBtn.addEventListener('click',()=>{
+        let notifyUsers = new XMLHttpRequest();
+        notifyUsers.open('get','/admin/notify-users-fee',true);
+        notifyUsers.onload = function(){
+            // alert(this.responseText)
+            if(JSON.parse(this.responseText).message == 'Success'){
+
+                alert("Notified");
+            }  
+            else{
+                alert("Error")
+            }
+        }
+        notifyUsers.send();
+    })
+    }
+    
+    
+</script>
+</html>

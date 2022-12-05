@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fitness websit</title>
+    <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+       .navbar {
+      margin-bottom: 0;
+      border-radius: 0;
+
+    }
+    
+    /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+    .row.content {height: 100vh}
+    
+    /* Set gray background color and 100% height */
+    .sidenav {
+      padding-top: 20px;
+      background-color: #f1f1f1;
+      height: 100%;
+    }
+    
+    /* Set black background color, white text and some padding */
+    footer {
+      background-color: #555;
+      color: white;
+      padding: 15px;
+    }
+    
+    /* On small screens, set height to 'auto' for sidenav and grid */
+    @media screen and (max-width: 767px) {
+      .sidenav {
+        height: 100vh;
+        padding: 15px;
+      }
+      .row.content {height:100vh;} 
+    }
+    .addedSubmitButton{
+        border-radius: 4px;
+        background-color: rgb(31, 117, 20); 
+        color: white;
+    }
+    .detailsButton{
+        border-radius: 4px;
+        background-color: black; 
+        color: white;
+    }
+    .chartButtons{
+        border-radius: 4px;
+        background-color: rgb(32, 148, 21); 
+        color: white;
+    }
+    .charts{
+        margin-top: 40px;
+        margin-bottom: 20px;
+
+    }
+    table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+
+th {
+  background-color: #04AA6D;
+  color: white;
+}
+  </style>
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+        <p style="font-size: 30px; color: white;">Home</p>
+
+    <p style="font-size: 15px; color: white;" id = "memberName"></p>
+
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+
+      </ul>
+    </div>
+  </div>
+</nav>
+  
+<div class="container-fluid text-center ">    
+  <div class="row content">
+    <div class="col-sm-2 sidenav">
+        <ul style="list-style: none; float: left;">
+            <li style="height: 50px; "><button  class="detailsButton" id = "trainerbtn"> Trainers</button> </li>
+            <li style="height: 50px; "><button  class="detailsButton" id = "packagebtn"> Packages</button> </li>
+            <li style="height: 50px; ">
+                <a href="/member/disc-list-page">
+
+                    <button  class="detailsButton"> Chat</button>
+                </a>
+                </li>
+            <li style="height: 50px; "><form action="/member/load-todo" method="post">
+ 
+                    <button  class="detailsButton">Todo</button>
+                    </form></li>
+            
+            
+
+        </ul>
+    </div>
+    <div class="col-sm-8 text-left">
+        <div id="member_list">
+        
+        </div>
+        <br>
+        <h2>Fitness Graphs</h2>
+    <div class="charts">
+
+        <div id="weightChartContainer" style="height: 300px; width: 100%;">
+        </div>
+            <label for="userWeight" >Enter</label>
+            <input type="number", id = "userWeight">
+        <button id = "addButtonWeight" class = "chartButtons" >Add</button>
+    </div> 
+
+    <div class="charts">
+
+        <div id="calorieChartContainer" style="height: 300px; width: 100%;">
+        </div>
+        <label for="userCalorieGoal">Enter today's goal</label>
+       <input type="number", id = "userCalorieGoal">
+
+        <label for="userCalorieDone" style="margin-left: 20px;">Completed today</label>
+         <input type="number", id = "userCalorieDone">
+
+        <button id = "addButtonCalorie" class = "chartButtons">Add</button>
+        <br>
+    </div>
+
+    <div class="charts">
+
+        <div id="stepChartContainer" style="height: 300px; width: 100%;">
+        </div>
+        <label for="userStepGoal">Enter today's goal</label>
+        <input type="number", id = "userStepGoal">
+        <label for="userStepDone" style="margin-left: 20px;">Completed today</label>
+        <input type="number", id = "userStepDone">
+        <button id = "addButtonSteps" class = "chartButtons">Add</button>
+    </div>
+    
+</div>
+<div class="col-sm-2 sidenav">
+    <h2>Profile</h2>
+    <div id="details">
+        
+    </div>
+    </div>
+</div>
+</div>
+
+<footer class="container-fluid text-center">
+    <p><a href="/" style="float: left; color: antiquewhite;">Sign Out</a></p>
+
+</footer>
+
+</body>
+<script>
+
+
+
+   
+    function createTrainerTable(){
+        return new Promise((resolve,reject)=>{
+            let container = document.getElementById("member_list");
+            container.innerHTML = `
+            <h2>Trainers</h2>
+            <br>
+            <table id = "member_table">
+            <tr>
+               <th scope="col">Sl no.</th>
+                <th scope="col">Name</th>
+                <th scope="col">age</th>
+                <th scope="col">gender</th>
+                <th scope="col">phone number</th>
+                <th scope="col">Email</th>
+            </tr>
+        </table>
+            `
+            resolve();
+        })
+    }
+
+    function createPackageTable(){
+        return new Promise((resolve,reject)=>{
+            let container = document.getElementById("member_list");
+            container.innerHTML = `
+            <h2>Packages</h2>
+            <br>
+            <table id = "member_table">
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">duration</th>
+                <th scope="col">amount</th>
+                <th scope="col">description</th>
+            </tr>
+        </table>
+            `
+            resolve();
+        })
+    }
+
+    let memberIdELement = document.getElementById("memberName")
+    memberIdELement.innerText = sessionStorage.getItem('name');
+    let memberName = memberIdELement.innerText;
+    let fillListDetails = new XMLHttpRequest()
+    let trainerbtn = document.getElementById("trainerbtn");
+    trainerbtn.addEventListener('click',()=>{
+        fillListDetails.open('get','/member/getTrainerList',true);
+        fillListDetails.setRequestHeader('Content-Type', 'application/json') 
+        fillListDetails.onload = function () {
+        if(this.status === 200){
+            createTrainerTable().then(()=>{
+
+                console.log("type:",typeof(this.responseText))
+            console.log("response:",this.response);
+            console.log("type only:",typeof(this.response))
+            console.log("json",JSON.parse(this.responseText)[0])
+            let listArr = JSON.parse(this.responseText);
+            for(let i =0;i<listArr.length;i++){
+                var table = document.getElementById("member_table");
+                var row = table.insertRow(1);
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+                var cell4 = row.insertCell(3);
+                var cell5 = row.insertCell(4);
+                var cell6 = row.insertCell(5);
+
+                cell1.innerHTML = `${listArr.length-i}`;
+                cell2.innerHTML = `${listArr[i].name}`;
+                cell3.innerHTML = `${listArr[i].age}`;
+                cell4.innerHTML = `${listArr[i].gender}`;
+                cell5.innerHTML = `${listArr[i].phoneNumber}`;
+                cell6.innerHTML = `${listArr[i].email}`;
+            }
+            })
+        }
+        else{
+            console.log("Some error occured")
+        }
+    }
+    fillListDetails.send();
+    })
+
+
+    let packagebtn = document.getElementById("packagebtn");
+    packagebtn.addEventListener('click',()=>{
+        fillListDetails.open('get','/member/getPackageList',true);
+        fillListDetails.setRequestHeader('Content-Type', 'application/json') 
+        fillListDetails.onload = function () {
+        if(this.status === 200){
+            createPackageTable().then(()=>{
+
+                console.log("type:",typeof(this.responseText))
+            console.log("response:",this.response);
+            console.log("type only:",typeof(this.response))
+            console.log("json",JSON.parse(this.responseText)[0])
+            let listArr = JSON.parse(this.responseText);
+            for(let i =0;i<listArr.length;i++){
+                var table = document.getElementById("member_table");
+                var row = table.insertRow(1);
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+                var cell4 = row.insertCell(3);
+
+                cell1.innerHTML = `${listArr[i].id}`;
+                cell2.innerHTML = `${listArr[i].duration}`;
+                cell3.innerHTML = `${listArr[i].amount}`;
+                cell4.innerHTML = `${listArr[i].description}`;
+            }
+            })
+        }
+        else{
+            console.log("Some error occured")
+        }
+    }
+    fillListDetails.send();
+    })
+
+
+
+    function createChartsObjSteps(dataObj){
+        let firstObj = {"type":"column", "dataPoints":new Array()},secondObj = {"type":"column", "dataPoints":new Array()};
+        for(let i =0;i<dataObj.length;i++){
+            let temp = dataObj[i].x
+            temp = temp.slice(0,10)
+            // console.log("temp",temp);
+            // console.log(new Date(temp));
+            let tempObj1 = {}
+            tempObj1.x = 10*i;
+            tempObj1.y = dataObj[i].goal;
+            tempObj1.label = temp//new Date(temp);
+            tempObj1.indexLabel = 'goal';
+            tempObj1.indexLabelFontSize = 15;
+            firstObj.dataPoints.push(tempObj1);
+            // console.log("1",firstObj);
+            let tempObj2 = {}
+            tempObj2.x = 10*i
+            tempObj2.y = dataObj[i].done;
+            tempObj2.label = temp//new Date(temp);
+            tempObj2.indexLabel = 'completed';
+            tempObj2.indexLabelFontSize = 15;
+            secondObj.dataPoints.push(tempObj2);
+            // console.log("2",secondObj);
+        }
+        
+        let text = "steps";
+        let data = [firstObj,secondObj]
+        let obj = {title:{text:text},data: data};
+        console.log(obj);
+        return obj;
+    }
+   
+
+    let xmlReqSteps = new XMLHttpRequest();
+    xmlReqSteps.open('get','/member/get-step',true);
+    xmlReqSteps.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    xmlReqSteps.setRequestHeader('name',memberName);
+    xmlReqSteps.onload = function(){
+    let stepChart = new CanvasJS.Chart("stepChartContainer",createChartsObjSteps(JSON.parse(this.responseText)))
+    stepChart.render();
+}
+xmlReqSteps.send();
+
+
+
+
+
+
+    
+
+    function createChartsObjCalories(dataObj){
+        let firstObj = {"type":"column", "dataPoints":new Array()},secondObj = {"type":"column", "dataPoints":new Array()};
+        for(let i =0;i<dataObj.length;i++){
+            let temp = dataObj[i].x
+            temp = temp.slice(0,10)
+            let tempObj1 = {}
+            tempObj1.x = 10*i;
+            tempObj1.y = dataObj[i].goal;
+            tempObj1.label = temp
+            tempObj1.indexLabel = 'gaol';
+            tempObj1.indexLabelFontSize = 15;
+            firstObj.dataPoints.push(tempObj1);
+            let tempObj2 = {}
+            tempObj2.x = 10*i
+            tempObj2.y = dataObj[i].done;
+            tempObj2.label = temp
+            tempObj2.indexLabel = 'completed';
+            tempObj2.indexLabelFontSize = 15;
+            secondObj.dataPoints.push(tempObj2);
+        }
+        
+        let text = "calories";
+        let data = [firstObj,secondObj]
+        let obj = {title:{text:text},data: data};
+        console.log(obj);
+        return obj;
+    }
+   
+
+    let xmlReqCalories = new XMLHttpRequest();
+    xmlReqCalories.open('get','/member/get-calories',true);
+    xmlReqCalories.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    xmlReqCalories.setRequestHeader('name',memberName);
+    xmlReqCalories.onload = function(){
+    let calorieChart = new CanvasJS.Chart("calorieChartContainer",createChartsObjCalories(JSON.parse(this.responseText)))
+    calorieChart.render();
+}
+xmlReqCalories.send();
+
+    function createChartsObjWeights(dataObj){
+        for(let i =0;i<dataObj.length;i++){
+            let temp = dataObj[i].x
+            temp = temp.slice(0,10)
+            dataObj[i].x = new Date(temp); 
+        }
+       
+        let text = "weights";
+        let type = "line"
+        let dataPoints = dataObj;
+        let inDataObj = {type: type, dataPoints : dataPoints}
+        data = [inDataObj]
+        let obj = {title:{text:text},data: data};
+        console.log(obj)
+        return obj;
+    }
+
+let xmlReqWeights = new XMLHttpRequest();
+xmlReqWeights.open('post','/member/get-weights',true);
+xmlReqWeights.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+xmlReqWeights.onload = function(){
+    let chart = new CanvasJS.Chart("weightChartContainer",createChartsObjWeights(JSON.parse(this.responseText)));
+    chart.render();
+}
+xmlReqWeights.send(`name=${memberName}`);
+
+let getDetailsReq = new XMLHttpRequest();
+getDetailsReq.open('post','/member/getDetails',true);
+getDetailsReq.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+getDetailsReq.onload = function(){
+    let res = JSON.parse(this.responseText)
+    let details = document.getElementById('details');
+    details.innerHTML=`
+    <p>Name : ${res[0].name}</p>
+    <p>Age : ${res[0].age}</p>
+    <p>Gender : ${res[0].gender}</p>
+    <p>Phone Number : ${res[0].phoneNumber}</p>
+    <p>Email : ${res[0].email}</p>
+    <p>Start Date : ${res[0].startDate.substr(0,10)}</p>
+    <p>Fee Status : ${res[0].feeStatus}</p>
+    <p>Balance : Rs.${res[0].balance}</p>
+    <p>Package ID : ${res[0].packageid}</p>
+    <p>Trainer Name : ${res[0].trainerName}</p>
+    `
+}
+getDetailsReq.send(`name=${memberName}`);
+
+let addButtonWeight = document.getElementById("addButtonWeight")
+addButtonWeight.addEventListener('click',()=>{
+    let inputWeight = document.getElementById("userWeight")
+    let weight = inputWeight.value;
+    let weightReq = new XMLHttpRequest();
+    weightReq.open('post','/member/add-weight',true);
+    weightReq.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    inputWeight.value = '';
+    let date = new Date();
+    let dateString = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
+    weightReq.send(`name=${memberName}&x=${dateString}&y=${weight}`);
+})
+
+
+let addButtonCalorie = document.getElementById("addButtonCalorie")
+addButtonCalorie.addEventListener('click',()=>{
+    console.log("Clicked calorie add");
+    let inputCalorieGoal = document.getElementById("userCalorieGoal")
+    let inputCalorieDone = document.getElementById("userCalorieDone")
+    let calorieGoal = inputCalorieGoal.value;
+    let calorieDone = inputCalorieDone.value;
+    let calorieReq = new XMLHttpRequest();
+    calorieReq.open('post','/member/add-calorie',true);
+    calorieReq.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    inputCalorieGoal.value = "";
+    inputCalorieDone.value = "";
+    let date = new Date();
+    let dateString = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
+    calorieReq.send(`name=${memberName}&x=${dateString}&goal=${calorieGoal}&done=${calorieDone}`);
+})
+
+let addButtonSteps = document.getElementById("addButtonSteps")
+addButtonSteps.addEventListener('click',()=>{
+    let inputStepGoal = document.getElementById("userStepGoal")
+    let inputStepDone = document.getElementById("userStepDone")
+    let stepGoal = inputStepGoal.value;
+    let stepDone = inputStepDone.value;
+    let stepReq = new XMLHttpRequest();
+    stepReq.open('post','/member/add-step',true);
+    stepReq.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    inputStepGoal.value = "";
+    inputStepDone.value = "";
+    let date = new Date();
+    let dateString = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
+    stepReq.send(`name=${memberName}&x=${dateString}&goal=${stepGoal}&done=${stepDone}`);
+})
+
+</script>
+</html>
