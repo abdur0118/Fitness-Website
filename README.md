@@ -16,10 +16,10 @@ Features:
 ### MEMBER VIEW
 ![trainer assigning tasks to the associated member](https://user-images.githubusercontent.com/93126982/205688115-091616a3-0af4-4237-b7cc-c5393ca4644b.png)
 ### TRAINER VIEW
-## 3.Read latest fitness articles.\
+## 3.Read latest fitness articles.
 ![discussion topics](https://user-images.githubusercontent.com/93126982/205688339-f6963a6f-60a3-496d-bfb6-9e6a6567cf1c.png)
 ### NEWS ITEMS
-## 4.Connect and chat with people.\ 
+## 4.Connect and chat with people.\
 ![member chat screen](https://user-images.githubusercontent.com/93126982/205688499-394e488c-98ef-485b-9dc6-2a2c17126849.png)
 ### CHATTING FEATURE
 ## 5.Admin panel.
