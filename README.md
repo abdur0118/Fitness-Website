@@ -29,4 +29,6 @@ Members can discuss about a particular topic that was fetched by newsapi under t
 The file structure of the system can be improved by modularizing the chatting system seperately\
 No authentications(JWT can be implemented)\
 Lots of code is repeated in the views part\
-Dynamic view of the pages are done in plain javascript, can be replaced with frameworks like React\
+Dynamic view of the pages are done in plain javascript, can be replaced with frameworks like React
+## Technologies Used:
+HTML, CSS, socketio, newsapi, javascript, nodejs, MySQL, Canvas(for charts)
