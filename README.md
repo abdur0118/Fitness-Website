@@ -5,7 +5,7 @@ There are 3 kinds of logins:\
 2.Trainer(one who works on the fitness aspects)\
 3.Admin(one who manages the gym)\
 A group of members are associated with specific trainers and trainers can view part of the fitness data of assigned members.\
-Features:\
+Features:
 ## 1.Track and record fitness parameters in form of graphs.
 ![member home page](https://user-images.githubusercontent.com/93126982/205687071-0db39a5d-1699-430b-9938-a4cc1ba03a54.png)
 ### MEMBER VIEW
@@ -21,10 +21,10 @@ Features:\
 ### NEWS ITEMS
 ## 4.Connect and chat with people.\ 
 ![member chat screen](https://user-images.githubusercontent.com/93126982/205688499-394e488c-98ef-485b-9dc6-2a2c17126849.png)
-### CHATTING FEATURE\
+### CHATTING FEATURE
 ## 5.Admin panel.
 ![page showing due users](https://user-images.githubusercontent.com/93126982/205688566-a692c6b8-f17f-400f-8f2b-f2e08433fe5e.png)
-Improvements:\
+## Improvements:
 The file structure of the system can be improved by modularizing the chatting system seperately\
 No authentications(JWT can be implemented)\
 Lots of code is repeated in the views part\
