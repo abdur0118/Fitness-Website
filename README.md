@@ -31,4 +31,4 @@ No authentications(JWT can be implemented)\
 Lots of code is repeated in the views part\
 Dynamic view of the pages are done in plain javascript, can be replaced with frameworks like React
 ## Technologies Used:
-HTML, CSS, socketio, newsapi, javascript, nodejs, MySQL, Canvas(for charts)
+HTML, CSS, socket.io(for chatting features), newsapi, javascript, nodejs, MySQL, Canvas(for charts)
