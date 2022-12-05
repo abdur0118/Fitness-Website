@@ -19,7 +19,8 @@ Features:
 ## 3.Read latest fitness articles.
 ![discussion topics](https://user-images.githubusercontent.com/93126982/205688339-f6963a6f-60a3-496d-bfb6-9e6a6567cf1c.png)
 ### NEWS ITEMS
-## 4.Connect and chat with people.\
+## 4.Connect and chat with people.
+Members can discuss about a particular topic that was fetched by newsapi under the topic heading.
 ![member chat screen](https://user-images.githubusercontent.com/93126982/205688499-394e488c-98ef-485b-9dc6-2a2c17126849.png)
 ### CHATTING FEATURE
 ## 5.Admin panel.
