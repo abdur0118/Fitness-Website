@@ -1,5 +1,5 @@
 # Fitness-Website
-A website to track fitness goals, connect with people and manage data like tracking calories and footsteps\n
+A website to track fitness goals, connect with people and manage data like tracking calories and footsteps\
 Features: 
 Track and record fitness parameters in form of graphs.
 ![member home page](https://user-images.githubusercontent.com/93126982/205687071-0db39a5d-1699-430b-9938-a4cc1ba03a54.png)
